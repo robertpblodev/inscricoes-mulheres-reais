@@ -134,7 +134,7 @@
             transition: background 0.3s ease;
         }
         .payment-container h3 {
-            color: #349b53;
+            color: #88c941;
             font-size: 20px;
         }
 
@@ -185,6 +185,7 @@
     margin-top: 10px;
     display: block;
     line-height: 1.6; /* Melhor espaçamento entre as linhas */
+    text-align: left; /* Alinha todo o conteúdo à esquerda */
 }
 
 /* Rótulos de NOME e BANCO */
@@ -192,14 +193,30 @@
     font-size: 14px;
     font-weight: 600;
     color: #a84143;
-    margin-right: 05px; /* Espaço entre o rótulo e o valor */
+    display: block; /* Faz com que cada rótulo ocupe sua própria linha */
+    margin-bottom: 2px; /* Espaço entre o rótulo e o valor */
 }
 
-/* Estilo para as informações (alinhar uma abaixo da outra) */
+/* Estilo para as informações */
 .pix-info p {
     margin: 5px 0; /* Espaçamento entre as linhas */
-    display: flex;
-    align-items: center;
+    display: block; /* Garante que cada informação fique em uma nova linha */
+}
+.custom-alert {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #a84143;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+    z-index: 1000;
+    display: none;
 }
     </style>
 </head>
@@ -241,15 +258,22 @@
                 <button type="submit">Enviar</button>
             </form>
         </div>
+
+        <div class="form-container" id="registrationClosedContainer" style="display: none;">
+            <h2>Inscrições Encerradas</h2>
+            <p style="text-align: center;">As inscrições foram encerradas. Caso tenha dúvidas, entre em contato pelo WhatsApp.</p>
+            <button onclick="sendWhatsApp()">Falar com a Secretaria</button>
+        </div>
+
         <div class="payment-container" id="paymentContainer">
             <img src="check.png" alt="Inscrição Realizada">
             <h3>Inscrição Realizada!</h3>
             <h4>Realize o pagamento para confirmar sua inscrição.</h4>
             <img src="pix.jpg" alt="QR Code PIX">
-           <p class="pix-key" id="pixKey">85-0001/03.488.295</p>
+           <p class="pix-key" id="pixKey">(88) 99990-2726</p>
 <div class="pix-info">
-    <p><strong>NOME:</strong> IGREJA BATISTA VALE DO ACARAU</p>
-    <p><strong>BANCO:</strong> BRADESCO</p>
+    <p><strong>NOME</strong> IGREJA BATISTA VALE DO ACARAU</p>
+    <p><strong>BANCO</strong> CAIXA ECONOMICA</p>
 </div>
             <button onclick="copyPixKey()">Copiar Chave PIX</button>
             <button onclick="sendWhatsApp()">Enviar Comprovante</button>
@@ -289,17 +313,41 @@
             document.getElementById('paymentContainer').style.display = 'block';
         });
 
-        function copyPixKey() {
+            function copyPixKey() {
             const pixKey = document.getElementById("pixKey").innerText;
             navigator.clipboard.writeText(pixKey);
-            alert("Chave PIX copiada!");
-        }
+
+            // Criar e exibir alerta estilizado
+            let alertBox = document.createElement("div");
+            alertBox.className = "custom-alert";
+            alertBox.innerText = "Chave PIX copiada!";
+            
+            document.body.appendChild(alertBox);
+            alertBox.style.display = "block";
+
+            // Remover o alerta após 3 segundos
+            setTimeout(() => {
+                alertBox.style.opacity = "0";
+                setTimeout(() => alertBox.remove(), 500);
+            }, 3000);
+            }
 
         function sendWhatsApp() {
             const phoneNumber = "558899902726";
             const message = encodeURIComponent("Olá, segue meu comprovante de pagamento para o Mulheres Reais.");
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
         }
+
+        // BLOQUEIO DE INSCRIÇÕES APÓS HORÁRIO
+        (function checkRegistrationDeadline() {
+    const agora = new Date();
+    const limite = new Date(2025, 3, 10, 8, 0, 0); // 10/04/2025 às 08:00
+
+    if (agora >= limite) {
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('registrationClosedContainer').style.display = 'block';
+    }
+        })();
     </script>
 </body>
 </html>
