@@ -258,6 +258,13 @@
                 <button type="submit">Enviar</button>
             </form>
         </div>
+
+        <div class="form-container" id="registrationClosedContainer" style="display: none;">
+            <h2>Inscrições Encerradas</h2>
+            <p style="text-align: center;">As inscrições foram encerradas. Caso tenha dúvidas, entre em contato pelo WhatsApp.</p>
+            <button onclick="sendWhatsApp()">Falar com a Secretaria</button>
+        </div>
+
         <div class="payment-container" id="paymentContainer">
             <img src="check.png" alt="Inscrição Realizada">
             <h3>Inscrição Realizada!</h3>
@@ -330,6 +337,17 @@
             const message = encodeURIComponent("Olá, segue meu comprovante de pagamento para o Mulheres Reais.");
             window.open(`https://wa.me/${phoneNumber}?text=${message}`, "_blank");
         }
+
+        // BLOQUEIO DE INSCRIÇÕES APÓS HORÁRIO
+        (function checkRegistrationDeadline() {
+    const agora = new Date();
+    const limite = new Date(2025, 3, 10, 8, 0, 0); // 10/04/2025 às 08:00
+
+    if (agora >= limite) {
+        document.getElementById('formContainer').style.display = 'none';
+        document.getElementById('registrationClosedContainer').style.display = 'block';
+    }
+        })();
     </script>
 </body>
 </html>
