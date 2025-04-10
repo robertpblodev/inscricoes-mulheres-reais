@@ -341,7 +341,7 @@
         // BLOQUEIO DE INSCRIÇÕES APÓS HORÁRIO
         (function checkRegistrationDeadline() {
     const agora = new Date();
-    const limite = new Date(2025, 3, 10, 16, 0, 0); // 10/04/2025 às 16:00
+    const limite = new Date(2025, 3, 11, 0, 0, 0); // 11/04/2025 às 00:00
 
     if (agora >= limite) {
         document.getElementById('formContainer').style.display = 'none';
